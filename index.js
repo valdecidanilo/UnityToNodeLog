@@ -22,21 +22,18 @@ app.get('/usuarios', (req, res) => {
 
 // Socket.IO connection event
 io.on('connection', (socket) => {
-    console.log('Nova conexão:', socket.id);
     
-    // Adicionar usuário à lista quando ele se conecta
     users.push({ id: socket.id });
     io.emit('updateUserList', users);
-    // Socket.IO disconnect event
+    console.log(users);
     socket.on('disconnect', () => {
         console.log('Cliente desconectado:', socket.id);
         users = users.filter(user => user.id !== socket.id);
         io.emit('updateUserList', users);
     });
     // Rota para publicar logs
-    socket.on('post-log', (logData) => {
-        console.log('Log recebido:', logData);
-        console.log(`${logData.user}: ${logData.message} timestamp: ${logData.timestamp}`);
+    socket.on('post-log', (jsonLog) => {
+        console.log(`${jsonLog.user}: ${jsonLog.message} timestamp: ${jsonLog.timestamp}`);
     });
     
     socket.on('updateUserList', function(users) {
