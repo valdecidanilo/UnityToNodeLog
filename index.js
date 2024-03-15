@@ -1,17 +1,13 @@
 // Importa o módulo HTTP do Node.js
-const https = require('https');
-const fs = require('fs');
+const http = require('http');
 // Importa o módulo Socket.IO
 const socketIO = require('socket.io');
 
-// Carrega os certificados SSL
-const privateKey = fs.readFileSync('chave-privada.pem', 'utf8');
-const certificate = fs.readFileSync('certificado.pem', 'utf8');
-
-const credentials = { key: privateKey, cert: certificate };
 
 // Cria o servidor HTTP
-const server = https.createServer(credentials);
+const server = http.createServer((req, res) => {
+    res.end('Server is running');
+});
 
 // Inicia o servidor na porta 3000
 server.listen(3000, () => {
