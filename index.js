@@ -21,7 +21,7 @@ const io = socketIO(server);
 
 // Lógica do Socket.IO aqui
 
-const PORT = process.env.PORT || 80; // Usar a porta 80 para HTTP
+const PORT = 3000; // Usar a porta 80 para HTTP
 
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
