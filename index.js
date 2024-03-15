@@ -26,27 +26,21 @@ io.on('connection', (socket) => {
     
     // Adicionar usuário à lista quando ele se conecta
     users.push({ id: socket.id });
-
+    io.emit('updateUserList', users);
     // Socket.IO disconnect event
     socket.on('disconnect', () => {
         console.log('Cliente desconectado:', socket.id);
-        
-        // Remover usuário da lista quando ele se desconectar
         users = users.filter(user => user.id !== socket.id);
+        io.emit('updateUserList', users);
     });
     // Rota para publicar logs
     socket.on('post-log', (logData) => {
         console.log('Log recebido:', logData);
         console.log(`${logData.user}: ${logData.message} timestamp: ${logData.timestamp}`);
     });
-    socket.on('updateUserList', function(users) {
-        // Limpar a lista de usuários existente
-        $('#userList').empty();
     
-        // Adicionar cada usuário à lista
-        users.forEach(function(user) {
-            $('#userList').append('<li>' + user.name + '</li>');
-        });
+    socket.on('updateUserList', function(users) {
+        console.log('Usuários atualizados:', users);
     });
 });
 
