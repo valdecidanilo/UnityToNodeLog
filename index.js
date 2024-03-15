@@ -34,10 +34,8 @@ io.on('connection', (socket) => {
         users = users.filter(user => user.id !== socket.id);
     });
     // Rota para publicar logs
-    socket.on('post-log', (req, res) => {
-        const logData = req.body;
+    socket.on('post-log', (logData) => {
         console.log(`${logData.user}: ${logData.message} timestamp: ${logData.timestamp}`);
-        res.send('Log received');
     });
     socket.on('updateUserList', function(users) {
         // Limpar a lista de usuários existente
