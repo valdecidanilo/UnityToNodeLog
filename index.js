@@ -1,31 +1,14 @@
-const { readFileSync } = require("fs");
-const { createServer } = require("https");
+const { createServer } = require("http");
 const { Server } = require("socket.io");
 
-const httpsServer = createServer({
-    key: readFileSync("chave-privada.pem"),
-    cert: readFileSync("certificado.pem")
-});
-
-const io = new Server(httpsServer, { /* options */ });
-
-const connectedUsers = {};
+const httpServer = createServer();
+const port = 3000;
+const io = new Server(httpServer, { /* options */ });
 
 io.on("connection", (socket) => {
-    console.log("usuario conectado");
-    socket.on("user_connected", (username) => {
-        connectedUsers[socket.id] = username;
-        console.log(connectedUsers);
-        io.emit("user_list", Object.values(connectedUsers));
-    });
-
-    socket.on("disconnect", () => {
-        delete connectedUsers[socket.id];
-        console.log("usuario desconectado");
-        io.emit("user_list", Object.values(connectedUsers));
-    });
+    console.log("connected");
 });
 
-httpsServer.listen(8444, () => {
-    console.log("Servidor rodando na porta 8444");
+httpServer.listen(port, () => {
+    console.log(`Server listening on ${port}`);
 });
