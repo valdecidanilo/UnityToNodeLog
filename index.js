@@ -1,28 +1,31 @@
-const http = require('http');
-const express = require('express');
+const https = require('https');
+const fs = require('fs');
 const socketIO = require('socket.io');
 
-const app = express();
+// Carregar certificado SSL
+const privateKey = fs.readFileSync('chave-privada.pem', 'utf8');
+const certificate = fs.readFileSync('certificado.pem', 'utf8');
 
-// Redirecionar todas as solicitações HTTPS para HTTP
-app.use((req, res, next) => {
-    if (req.secure) {
-        res.redirect('http://' + req.headers.host + req.url);
-    } else {
-        next();
-    }
+const credentials = { key: privateKey, cert: certificate };
+
+// Criar servidor HTTPS
+const httpsServer = https.createServer(credentials);
+
+// Iniciar servidor na porta 3000
+httpsServer.listen(3000, () => {
+    console.log('Server is running on port 3000');
 });
 
-// Criar servidor HTTP
-const server = http.createServer(app);
+// Criar uma instância do Socket.IO e passar o servidor HTTPS
+const io = socketIO(httpsServer);
 
-// Criar uma instância do Socket.IO e passar o servidor HTTP
-const io = socketIO(server);
+// Lógica do Socket.IO
+io.on('connection', (socket) => {
+    console.log('User connected');
 
-// Lógica do Socket.IO aqui
+    // Lógica de manipulação de eventos Socket.IO aqui
 
-const PORT = 3000; // Usar a porta 80 para HTTP
-
-server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+    });
 });
