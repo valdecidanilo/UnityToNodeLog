@@ -18,12 +18,6 @@ app.get('/usuarios', (req, res) => {
     res.json(users);
 });
 
-// Rota para publicar logs
-app.post('/post-log', (req, res) => {
-    const logData = req.body;
-    console.log(`${logData.user}: ${logData.message} timestamp: ${logData.timestamp}`);
-    res.send('Log received');
-});
 
 // Socket.IO connection event
 io.on('connection', (socket) => {
@@ -38,6 +32,21 @@ io.on('connection', (socket) => {
         
         // Remover usuário da lista quando ele se desconectar
         users = users.filter(user => user.id !== socket.id);
+    });
+    // Rota para publicar logs
+    socket.on('post-log', (req, res) => {
+        const logData = req.body;
+        console.log(`${logData.user}: ${logData.message} timestamp: ${logData.timestamp}`);
+        res.send('Log received');
+    });
+    socket.on('updateUserList', function(users) {
+        // Limpar a lista de usuários existente
+        $('#userList').empty();
+    
+        // Adicionar cada usuário à lista
+        users.forEach(function(user) {
+            $('#userList').append('<li>' + user.name + '</li>');
+        });
     });
 });
 
