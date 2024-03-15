@@ -3,7 +3,7 @@ const { createServer } = require("https");
 const { Server } = require("socket.io");
 
 const httpsServer = createServer({
-  key: readFileSync("chave-privada.pem.pem"),
+  key: readFileSync("chave-privada.pem"),
   cert: readFileSync("certificado.pem")
 });
 
