@@ -5,8 +5,8 @@ const fs = require('fs');
 const socketIO = require('socket.io');
 
 // Carrega os certificados SSL
-const privateKey = fs.readFileSync('caminho/para/chave-privada.pem', 'utf8');
-const certificate = fs.readFileSync('caminho/para/certificado.pem', 'utf8');
+const privateKey = fs.readFileSync('chave-privada.pem', 'utf8');
+const certificate = fs.readFileSync('certificado.pem', 'utf8');
 
 const credentials = { key: privateKey, cert: certificate };
 
