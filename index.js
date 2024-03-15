@@ -12,6 +12,7 @@ const io = new Server(httpsServer, { /* options */ });
 const connectedUsers = {};
 
 io.on("connection", (socket) => {
+    console.log("usuario conectado");
     socket.on("user_connected", (username) => {
         connectedUsers[socket.id] = username;
         console.log(connectedUsers);
@@ -25,4 +26,6 @@ io.on("connection", (socket) => {
     });
 });
 
-httpsServer.listen(3000);
+httpsServer.listen(3000, () => {
+    console.log("Servidor rodando na porta 3000");
+});
