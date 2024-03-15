@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 
 app.post('/receive-log', (req, res) => {
     const logData = req.body;
-    console.log(`Log: ${logData.message} timestamp: ${logData.timestamp}`);
+    console.log(`${logData.user}: ${logData.message} timestamp: ${logData.timestamp}`);
     res.send('Log received');
 });
 
