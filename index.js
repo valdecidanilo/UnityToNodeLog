@@ -9,8 +9,21 @@ const httpsServer = createServer({
 
 const io = new Server(httpsServer, { /* options */ });
 
+const connectedUsers = {};
+
 io.on("connection", (socket) => {
-  // ...
-});
+    socket.on("user_connected", (username) => {
+
+      connectedUsers[socket.id] = username;
+      
+      io.emit("user_list", Object.values(connectedUsers));
+    });
+  
+    socket.on("disconnect", () => {
+      delete connectedUsers[socket.id];
+      
+      io.emit("user_list", Object.values(connectedUsers));
+    });
+  });
 
 httpsServer.listen(3000);
