@@ -1,41 +1,28 @@
-// Importa o módulo HTTP do Node.js
 const http = require('http');
-// Importa o módulo Socket.IO
+const express = require('express');
 const socketIO = require('socket.io');
 
+const app = express();
 
-// Cria o servidor HTTP
-const server = http.createServer((req, res) => {
-    res.end('Server is running');
+// Redirecionar todas as solicitações HTTPS para HTTP
+app.use((req, res, next) => {
+    if (req.secure) {
+        res.redirect('http://' + req.headers.host + req.url);
+    } else {
+        next();
+    }
 });
 
-// Inicia o servidor na porta 3000
-server.listen(3000, () => {
-    console.log('Server is running on port 3000');
-});
+// Criar servidor HTTP
+const server = http.createServer(app);
 
-// Cria uma instância do Socket.IO e passa o servidor HTTP
+// Criar uma instância do Socket.IO e passar o servidor HTTP
 const io = socketIO(server);
 
-// Lista de usuários
-const userList = [];
+// Lógica do Socket.IO aqui
 
-// Evento de conexão do Socket.IO
-io.on('connection', (socket) => {
-    console.log('User connected');
+const PORT = process.env.PORT || 80; // Usar a porta 80 para HTTP
 
-    // Envio da lista de usuários para o cliente
-    socket.emit('userList', userList);
-
-    // Evento para adicionar um novo usuário
-    socket.on('addUser', (user) => {
-        userList.push(user);
-        // Envio da lista atualizada para todos os clientes
-        io.emit('userList', userList);
-    });
-
-    // Evento de desconexão do Socket.IO
-    socket.on('disconnect', () => {
-        console.log('User disconnected');
-    });
+server.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
