@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const bodyParser = require('body-parser');
 const socketIo = require('socket.io');
+const { log } = require('console');
 
 const app = express();
 const server = http.createServer(app);
@@ -35,6 +36,7 @@ io.on('connection', (socket) => {
     });
     // Rota para publicar logs
     socket.on('post-log', (logData) => {
+        console.log('Log recebido:', logData);
         console.log(`${logData.user}: ${logData.message} timestamp: ${logData.timestamp}`);
     });
     socket.on('updateUserList', function(users) {
