@@ -1,9 +1,11 @@
 const express = require('express');
 const http = require('http');
 const bodyParser = require('body-parser');
+const socketIo = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
+const io = socketIo(server);
 const port = 3000;
 
 app.use(bodyParser.json());
@@ -23,19 +25,19 @@ app.post('/receive-log', (req, res) => {
     res.send('Log received');
 });
 
-// Tratamento de conexão de clientes (simulado sem Socket.IO)
-server.on('connection', (socket) => {
-    console.log('Nova conexão:', socket.remoteAddress);
+// Socket.IO connection event
+io.on('connection', (socket) => {
+    console.log('Nova conexão:', socket.id);
     
     // Adicionar usuário à lista quando ele se conecta
-    users.push({ ip: socket.remoteAddress });
+    users.push({ id: socket.id });
 
-    // Tratamento de desconexão de clientes
-    socket.on('close', () => {
-        console.log('Cliente desconectado:', socket.remoteAddress);
+    // Socket.IO disconnect event
+    socket.on('disconnect', () => {
+        console.log('Cliente desconectado:', socket.id);
         
         // Remover usuário da lista quando ele se desconectar
-        users = users.filter(user => user.ip !== socket.remoteAddress);
+        users = users.filter(user => user.id !== socket.id);
     });
 });
 
