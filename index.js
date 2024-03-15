@@ -18,8 +18,8 @@ app.get('/usuarios', (req, res) => {
     res.json(users);
 });
 
-// Rota para receber logs
-app.post('/receive-log', (req, res) => {
+// Rota para publicar logs
+app.post('/post-log', (req, res) => {
     const logData = req.body;
     console.log(`${logData.user}: ${logData.message} timestamp: ${logData.timestamp}`);
     res.send('Log received');
