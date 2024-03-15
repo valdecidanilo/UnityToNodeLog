@@ -26,6 +26,6 @@ io.on("connection", (socket) => {
     });
 });
 
-httpsServer.listen(443, () => {
-    console.log("Servidor rodando na porta 443");
+httpsServer.listen(8444, () => {
+    console.log("Servidor rodando na porta 8444");
 });
